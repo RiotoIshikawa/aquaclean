@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>サービス一覧 | アクアクリーン株式会社</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #3CADE5;
+    --primary-dark: #1E8FC9;
+    --primary-light: #6BC5EE;
+    --primary-bg: #EAF2FE;
+    --green: #1FA958;
+    --green-dark: #178A47;
+    --gray-100: #F5F7FA;
+    --gray-200: #E5E9EF;
+    --gray-300: #CED4DC;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --text: #1F2937;
+    --white: #ffffff;
+    --shadow-sm: 0 1px 2px rgba(15,30,60,0.04), 0 1px 3px rgba(15,30,60,0.05);
+    --shadow-md: 0 4px 16px rgba(15,30,60,0.06), 0 2px 6px rgba(15,30,60,0.04);
+    --shadow-lg: 0 14px 38px rgba(15,30,60,0.08), 0 4px 12px rgba(15,30,60,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: #fff;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Logo ===== */
+  .logo { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; line-height: 1; }
+  .logo-mark {
+    background: var(--primary-light);
+    color: #fff;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 1.05;
+    text-align: center;
+    font-style: italic;
+    letter-spacing: 0.5px;
+    width: 70px;
+  }
+  .logo-mark span { display: block; }
+  .logo-sub { font-size: 10px; color: var(--primary); font-weight: 700; letter-spacing: 1px; }
+
+  /* ===== Header ===== */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    background: #fff; border-bottom: 1px solid var(--gray-200);
+  }
+  .header-inner { display: flex; align-items: center; gap: 24px; height: 84px; }
+  .nav {
+    display: flex; align-items: center; justify-content: center;
+    gap: 32px; flex: 1; height: 100%;
+  }
+  .nav a { font-size: 13px; font-weight: 600; color: var(--gray-700); white-space: nowrap; transition: color 0.15s; }
+  .nav a:hover, .nav a.active { color: var(--primary); }
+  .btn-contact {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgb(33,140,205); color: #fff;
+    padding: 0 22px; height: 56px; border-radius: 10px;
+    font-size: 14px; font-weight: 700; white-space: nowrap;
+    flex-shrink: 0; transition: background 0.15s;
+  }
+  .btn-contact:hover { background: var(--primary-dark); }
+
+  /* ===== Page Hero ===== */
+  .page-hero {
+    background: linear-gradient(180deg, #F4F8FE 0%, #EAF2FE 100%);
+    padding: 56px 0 48px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .page-hero-inner { text-align: center; }
+  .breadcrumb {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-size: 12px; color: var(--gray-500); margin-bottom: 18px;
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb-sep { color: var(--gray-300); }
+  .page-hero h1 {
+    font-size: 40px; font-weight: 900; color: var(--gray-800);
+    letter-spacing: -0.5px; margin-bottom: 14px;
+  }
+  .page-hero h1 span { color: var(--primary); }
+  .page-hero p { font-size: 15px; color: var(--gray-600); line-height: 1.8; }
+
+  /* ===== Category nav ===== */
+  .cat-nav {
+    background: #fff; border-bottom: 1px solid var(--gray-200);
+    position: sticky; top: 84px; z-index: 40;
+  }
+  .cat-nav-inner {
+    display: flex; gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .cat-nav-inner::-webkit-scrollbar { display: none; }
+  .cat-nav-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 22px; font-size: 13px; font-weight: 700;
+    color: var(--gray-600); white-space: nowrap; border: none;
+    background: none; cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+  }
+  .cat-nav-btn:hover { color: var(--primary); }
+  .cat-nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .cat-nav-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* ===== Main content ===== */
+  main { padding: 72px 0 96px; }
+
+  /* ===== Category section ===== */
+  .cat-section { margin-bottom: 80px; }
+  .cat-section:last-child { margin-bottom: 0; }
+  .cat-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 32px; padding-bottom: 16px;
+    border-bottom: 2px solid var(--primary-bg);
+  }
+  .cat-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--primary-bg); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cat-header-text {}
+  .cat-eyebrow { font-size: 11px; font-weight: 700; color: var(--primary); letter-spacing: 2px; margin-bottom: 4px; }
+  .cat-title { font-size: 22px; font-weight: 900; color: var(--gray-800); }
+
+  /* ===== Service grid ===== */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .service-grid.col2 { grid-template-columns: repeat(2, 1fr); max-width: 760px; }
+  .service-grid.col4 { grid-template-columns: repeat(4, 1fr); }
+
+  /* ===== Service card ===== */
+  .svc-card {
+    background: #fff; border: 1px solid var(--gray-200);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    display: flex; flex-direction: column;
+  }
+  .svc-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+
+  /* Image area */
+  .svc-img {
+    position: relative; height: 180px; overflow: hidden;
+    background: var(--gray-100);
+  }
+  .svc-img img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
+    transition: transform 0.3s;
+  }
+  .svc-card:hover .svc-img img { transform: scale(1.04); }
+  .svc-img-placeholder {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+  }
+  .svc-img-placeholder svg { opacity: 0.6; }
+  .svc-img-placeholder span { font-size: 11px; color: rgba(0,0,0,0.35); font-family: ui-monospace, monospace; }
+
+  /* Specific placeholder colors */
+  .ph-aircon   { background: linear-gradient(135deg, #E2EFF9 0%, #BDD8EF 100%); }
+  .ph-aircon   svg { color: #5A9FCA; }
+  .ph-move     { background: linear-gradient(135deg, #EEF2F9 0%, #D4DCF0 100%); }
+  .ph-move     svg { color: #7A8FC9; }
+  .ph-toilet   { background: linear-gradient(135deg, #E8F5EE 0%, #C5E0D0 100%); }
+  .ph-toilet   svg { color: #4FA878; }
+  .ph-bath     { background: linear-gradient(135deg, #E3F1FA 0%, #BBDCEF 100%); }
+  .ph-bath     svg { color: #4A9FC0; }
+  .ph-sink     { background: linear-gradient(135deg, #EAF5FC 0%, #C8E8F5 100%); }
+  .ph-sink     svg { color: #4AAECE; }
+  .ph-kitchen  { background: linear-gradient(135deg, #FEF3E8 0%, #F5DFC2 100%); }
+  .ph-kitchen  svg { color: #D48B40; }
+  .ph-hood     { background: linear-gradient(135deg, #FDF0EC 0%, #F1D5CB 100%); }
+  .ph-hood     svg { color: #CC7055; }
+  .ph-fan      { background: linear-gradient(135deg, #FDF3E3 0%, #F3E0BE 100%); }
+  .ph-fan      svg { color: #CCA055; }
+  .ph-floor    { background: linear-gradient(135deg, #F5F0E8 0%, #E5DAC5 100%); }
+  .ph-floor    svg { color: #A08B60; }
+  .ph-carpet   { background: linear-gradient(135deg, #F5EAF0 0%, #E5C8D8 100%); }
+  .ph-carpet   svg { color: #B86890; }
+  .ph-glass    { background: linear-gradient(135deg, #EEF5FD 0%, #D0E5F7 100%); }
+  .ph-glass    svg { color: #5590CC; }
+  .ph-entrance { background: linear-gradient(135deg, #F0EEEB 0%, #DDD8D0 100%); }
+  .ph-entrance svg { color: #8A8070; }
+  .ph-balcony  { background: linear-gradient(135deg, #EAF5EA 0%, #C8E0C8 100%); }
+  .ph-balcony  svg { color: #508850; }
+
+  /* Card body */
+  .svc-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+  .svc-name { font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; }
+  .svc-desc { font-size: 13px; color: var(--gray-600); line-height: 1.75; flex: 1; margin-bottom: 16px; }
+  .svc-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%; border: 1.5px solid var(--primary); color: var(--primary);
+    padding: 9px 14px; border-radius: 8px; font-weight: 700; font-size: 13px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .svc-btn:hover { background: var(--primary); color: #fff; }
+
+  /* ===== CTA strip ===== */
+  .cta-strip {
+    background: linear-gradient(180deg, #5BC2EE 0%, #1E8FC9 100%);
+    color: #fff; padding: 64px 0;
+  }
+  .cta-strip h2 { text-align: center; font-size: 30px; font-weight: 900; margin-bottom: 10px; }
+  .cta-strip p { text-align: center; font-size: 14px; opacity: 0.9; margin-bottom: 32px; }
+  .cta-btns {
+    display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+  }
+  .cta-btns a {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px;
+    transition: transform 0.12s, box-shadow 0.12s;
+    box-shadow: var(--shadow-md);
+  }
+  .cta-btns a:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .cta-btns .tel-btn { background: #fff; color: var(--primary); }
+  .cta-btns .mail-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1.5px solid rgba(255,255,255,0.4); }
+  .cta-btns .line-btn { background: var(--green); color: #fff; }
+
+  /* ===== Footer ===== */
+  .footer { background: #fff; border-top: 1px solid var(--gray-200); padding: 48px 0 0; }
+  .footer-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1.4fr;
+    gap: 32px; align-items: flex-start;
+  }
+  .footer-brand .footer-logo { margin-bottom: 16px; }
+  .footer-col h4 {
+    font-size: 13px; color: var(--primary); font-weight: 700;
+    margin-bottom: 16px; padding-left: 10px; border-left: 3px solid var(--primary);
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; }
+  .footer-col li a:hover { color: var(--primary); }
+  .footer-cta { display: flex; flex-direction: column; gap: 10px; }
+  .footer-cta a {
+    display: flex; align-items: center; gap: 12px;
+    border: 1.5px solid var(--gray-200); border-radius: 10px;
+    padding: 12px 16px; background: #fff; transition: all 0.15s;
+  }
+  .footer-cta a:hover { border-color: var(--primary); }
+  .footer-cta .ic {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .footer-cta .tel .ic { background: var(--primary-bg); color: var(--primary); }
+  .footer-cta .mail .ic { background: var(--primary-bg); color: var(--primary); }
+  .footer-cta .line .ic { background: rgba(31,169,88,0.12); color: var(--green); }
+  .footer-cta .label-lg { font-size: 16px; font-weight: 800; color: var(--gray-800); line-height: 1.1; }
+  .footer-cta .tel .label-lg { color: var(--primary); font-size: 18px; }
+  .footer-cta .label-sm { display: block; font-size: 10px; color: var(--gray-500); margin-top: 2px; }
+  .footer-bottom {
+    border-top: 1px solid var(--gray-200); margin-top: 40px; padding: 18px 0;
+    text-align: center; font-size: 11px; color: var(--gray-500);
+  }
+
+  @media (max-width: 960px) {
+    .page-hero h1 { font-size: 28px; }
+    .service-grid { grid-template-columns: repeat(2, 1fr); }
+    .service-grid.col2 { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
+    .service-grid.col4 { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .nav { display: none; }
+    .cta-btns { flex-direction: column; align-items: center; }
+  }
+  @media (max-width: 600px) {
+    .service-grid, .service-grid.col2, .service-grid.col4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo" aria-label="アクアクリーン">
+      <span class="logo-mark" style="background-color: rgb(60,173,229)"><span>Aqua</span><span>Clean</span></span>
+      <span class="logo-sub" style="color: rgb(60,173,229)">アクアクリーン</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html#services">サービス一覧</a>
+      <a href="index.html#reasons">選ばれる理由</a>
+      <a href="index.html#flow">ご利用の流れ</a>
+      <a href="index.html#results">実績紹介</a>
+      <a href="index.html#faq">よくあるご質問</a>
+      <a href="/blog/">ブログ</a>
+    </nav>
+    <div style="flex-shrink:0">
+      <a href="index.html#cta" class="btn-contact">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/><line x1="7" y1="17" x2="12" y2="17"/></svg>
+        無料お見積もり
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Page Hero ===== -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">トップ</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>サービス一覧</span>
+    </div>
+    <h1>サービス<span>一覧</span></h1>
+    <p>エアコン・水回り・キッチン・床など、あらゆる清掃をプロの技術でご対応します。<br>まずはお気軽にご相談ください。</p>
+  </div>
+</section>
+
+<!-- ===== Category Nav ===== -->
+<div class="cat-nav">
+  <div class="container">
+    <div class="cat-nav-inner">
+      <button class="cat-nav-btn active" onclick="scrollToSection('aircon',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="10" rx="2"/><line x1="6" y1="8" x2="18" y2="8"/><line x1="6" y1="11" x2="18" y2="11"/><path d="M8 14v3M16 14v3M12 14v5"/></svg>
+        エアコン
+      </button>
+      <button class="cat-nav-btn" onclick="scrollToSection('move',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><rect x="9" y="13" width="6" height="8"/></svg>
+        引越しクリーニング
+      </button>
+      <button class="cat-nav-btn" onclick="scrollToSection('water',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 8 4 12 4 16a8 8 0 0 0 16 0c0-4-4-8-8-14z"/></svg>
+        水回り
+      </button>
+      <button class="cat-nav-btn" onclick="scrollToSection('kitchen',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-4v-5h-8v5H4a1 1 0 0 1-1-1z"/></svg>
+        キッチン
+      </button>
+      <button class="cat-nav-btn" onclick="scrollToSection('floor',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        床・外回り
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Main ===== -->
+<main>
+  <div class="container">
+
+    <!-- エアコン -->
+    <section class="cat-section" id="aircon">
+      <div class="cat-header">
+        <div class="cat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="10" rx="2"/><line x1="6" y1="8" x2="18" y2="8"/><line x1="6" y1="11" x2="18" y2="11"/><path d="M8 14v3M16 14v3M12 14v5"/></svg>
+        </div>
+        <div class="cat-header-text">
+          <div class="cat-eyebrow">AIRCON CLEANING</div>
+          <div class="cat-title">エアコンクリーニング</div>
+        </div>
+      </div>
+      <div class="service-grid col2">
+        <div class="svc-card">
+          <div class="svc-img ph-aircon">
+            <img src="assets/hero-aircon.png" alt="エアコン壁掛けクリーニング" loading="lazy" />
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">エアコン壁掛けタイプ</div>
+            <p class="svc-desc">一般家庭やオフィスに多い壁掛け型エアコンを専用機材で内部まで徹底洗浄。カビ・ホコリを除去し、電気代の節約と快適な空気環境を実現します。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-aircon">
+            <div class="svc-img-placeholder">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="8" rx="2"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="9" x2="20" y2="9"/><path d="M7 11v4M17 11v4M12 11v6"/><rect x="4" y="2" width="16" height="3" rx="1"/></svg>
+              <span>天井埋め込みタイプ</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">天井埋め込みタイプ</div>
+            <p class="svc-desc">業務用・マンションに多い天井カセット式エアコンの分解洗浄。フィルター・ドレンパン・熱交換器を丁寧に清掃し、嫌なニオイや冷暖房効率の低下を解消します。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 引越しクリーニング -->
+    <section class="cat-section" id="move">
+      <div class="cat-header">
+        <div class="cat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><rect x="9" y="13" width="6" height="8"/></svg>
+        </div>
+        <div class="cat-header-text">
+          <div class="cat-eyebrow">MOVING CLEANING</div>
+          <div class="cat-title">引越しクリーニング</div>
+        </div>
+      </div>
+      <div class="service-grid col2">
+        <div class="svc-card">
+          <div class="svc-img ph-move">
+            <img src="assets/service-move.png" alt="引越し前クリーニング" loading="lazy" />
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">引越し前クリーニング</div>
+            <p class="svc-desc">退去前の原状回復に対応。長年の使用で蓄積した汚れや臭いをしっかりと除去し、次の入居者様を気持ちよくお迎えできる状態に整えます。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-move">
+            <div class="svc-img-placeholder">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><rect x="9" y="13" width="6" height="8"/><path d="M14 10l-2 2-2-2"/><path d="M12 8v4"/></svg>
+              <span>引越し後クリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">引越し後クリーニング</div>
+            <p class="svc-desc">新居への入居前に実施する念入り清掃。前の居住者の汚れや埃を除去し、安心・清潔な環境でスタートを切ることができます。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 水回り -->
+    <section class="cat-section" id="water">
+      <div class="cat-header">
+        <div class="cat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 8 4 12 4 16a8 8 0 0 0 16 0c0-4-4-8-8-14z"/></svg>
+        </div>
+        <div class="cat-header-text">
+          <div class="cat-eyebrow">WATER AREA CLEANING</div>
+          <div class="cat-title">水回りクリーニング</div>
+        </div>
+      </div>
+      <div class="service-grid">
+        <div class="svc-card">
+          <div class="svc-img ph-toilet">
+            <div class="svc-img-placeholder">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18c0 2.2 1.8 4 4 4h2c2.2 0 4-1.8 4-4v-2H7v2z"/><rect x="5" y="4" width="14" height="8" rx="2"/><path d="M5 10h14"/></svg>
+              <span>トイレクリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">トイレクリーニング</div>
+            <p class="svc-desc">便器・タンク・床・壁まで徹底洗浄。頑固な黒ずみや尿石を専用薬剤で除去し、除菌・消臭まで対応します。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-bath">
+            <img src="assets/service-house.png" alt="風呂・浴室クリーニング" loading="lazy" />
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">風呂・浴室クリーニング</div>
+            <p class="svc-desc">浴槽・床・壁・天井のカビ・水垢・石鹸カスをプロの技術で一掃。エプロン内部の洗浄にも対応しています。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-sink">
+            <div class="svc-img-placeholder">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2z"/><rect x="7" y="9" width="10" height="7" rx="1"/><path d="M12 3v6M9 4h6"/><circle cx="12" cy="14" r="1"/></svg>
+              <span>洗面台クリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">洗面台クリーニング</div>
+            <p class="svc-desc">洗面ボウル・鏡・蛇口周りの水垢・石鹸カスを除去。鏡を鏡面仕上げにし、清潔で気持ちよく使える状態に整えます。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- キッチン -->
+    <section class="cat-section" id="kitchen">
+      <div class="cat-header">
+        <div class="cat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-4v-5h-8v5H4a1 1 0 0 1-1-1z"/></svg>
+        </div>
+        <div class="cat-header-text">
+          <div class="cat-eyebrow">KITCHEN CLEANING</div>
+          <div class="cat-title">キッチンクリーニング</div>
+        </div>
+      </div>
+      <div class="service-grid">
+        <div class="svc-card">
+          <div class="svc-img ph-hood">
+            <div class="svc-img-placeholder">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14L4 20h16l-2-6H6z"/><path d="M8 14V8h8v6"/><path d="M12 5v3"/><path d="M9 8h6"/></svg>
+              <span>レンジフードクリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">レンジフードクリーニング</div>
+            <p class="svc-desc">油汚れが最も溜まりやすいレンジフードを分解洗浄。フィルター・シロッコファンまで徹底的に油脂を取り除き、火災リスクの低減にも繋がります。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-fan">
+            <div class="svc-img-placeholder">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3c0 3 2.5 5 5 5s5-2 5-2-2 5-5 5-5 2.5-5 5 2 5 2 5-5-2-5-5-2.5-5-5-5-5 2-5 2 2-5 5-5 5-2.5-5-5-5-2-5-2-5 2 5 5 5z"/></svg>
+              <span>換気扇クリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">換気扇クリーニング</div>
+            <p class="svc-desc">浴室・トイレ・キッチンなど各所の換気扇を分解して洗浄。蓄積した埃・油・カビを取り除き、換気効率を回復させます。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-kitchen">
+            <div class="svc-img-placeholder">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="1"/><path d="M3 10h18"/><circle cx="8" cy="14" r="1.5"/><circle cx="13" cy="14" r="1.5"/><path d="M18 12v4"/></svg>
+              <span>キッチンクリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">キッチンクリーニング</div>
+            <p class="svc-desc">シンク・コンロ・作業台・扉面など、キッチン全体の油汚れ・水垢をまとめて洗浄。清潔なキッチンで毎日の料理が快適になります。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もりはこちら →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 床・外回り -->
+    <section class="cat-section" id="floor">
+      <div class="cat-header">
+        <div class="cat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        </div>
+        <div class="cat-header-text">
+          <div class="cat-eyebrow">FLOOR &amp; EXTERIOR CLEANING</div>
+          <div class="cat-title">床・外回りクリーニング</div>
+        </div>
+      </div>
+      <div class="service-grid col4">
+        <div class="svc-card">
+          <div class="svc-img ph-floor" style="height:150px">
+            <div class="svc-img-placeholder">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="16" width="20" height="4" rx="1"/><path d="M4 16V6h16v10"/><path d="M8 16V9h8v7"/></svg>
+              <span>フローリング洗浄</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">フローリング洗浄</div>
+            <p class="svc-desc">研磨・洗浄・ワックス仕上げで床材を保護し、美しいツヤを取り戻します。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もり →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-carpet" style="height:150px">
+            <div class="svc-img-placeholder">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M7 5v14M11 5v14M15 5v14M3 9h18M3 13h18"/></svg>
+              <span>カーペットクリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">カーペットクリーニング</div>
+            <p class="svc-desc">専用機材で繊維の奥まで洗浄・乾燥。ダニ・シミ・臭いを除去します。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もり →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-glass" style="height:150px">
+            <div class="svc-img-placeholder">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 8h18M8 3v18M3 16h18"/></svg>
+              <span>ガラス・サッシクリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">ガラス・サッシクリーニング</div>
+            <p class="svc-desc">窓ガラスの水垢・汚れ・サッシの溝の泥汚れをスッキリ洗浄します。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もり →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-entrance" style="height:150px">
+            <div class="svc-img-placeholder">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 12h18M12 3v18M3 7.5h18M3 16.5h18M7.5 3v18M16.5 3v18"/></svg>
+              <span>玄関タイルクリーニング</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">玄関タイルクリーニング</div>
+            <p class="svc-desc">玄関タイル・目地の汚れを高圧洗浄や専用薬剤で除去。第一印象が変わります。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もり →</a>
+          </div>
+        </div>
+        <div class="svc-card">
+          <div class="svc-img ph-balcony" style="height:150px">
+            <div class="svc-img-placeholder">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10h14v11"/><path d="M3 10l9-7 9 7"/><path d="M9 21v-6h6v6"/></svg>
+              <span>ベランダ・外回り</span>
+            </div>
+          </div>
+          <div class="svc-body">
+            <div class="svc-name">ベランダ・外回りクリーニング</div>
+            <p class="svc-desc">ベランダ床・排水口・外壁の汚れをすっきり洗浄。雨染みや苔も対応します。</p>
+            <a href="index.html#cta" class="svc-btn">お見積もり →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ===== CTA strip ===== -->
+<section class="cta-strip">
+  <h2>まずはお気軽にご相談ください</h2>
+  <p>お見積り・ご相談は無料です</p>
+  <div class="cta-btns">
+    <a href="tel:0356470067" class="tel-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
+      03-5647-0067
+    </a>
+    <a href="index.html#cta" class="mail-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      メールで相談する
+    </a>
+    <a href="#" onclick="openLineModal();return false;" class="line-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+      LINEで相談する
+    </a>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo" aria-label="アクアクリーン">
+          <span class="logo-mark"><span>Aqua</span><span>Clean</span></span>
+          <span class="logo-sub" style="color: rgb(60,173,229)">アクアクリーン</span>
+        </a>
+      </div>
+      <div class="footer-col">
+        <h4>サービス</h4>
+        <ul>
+          <li><a href="#aircon">エアコンクリーニング</a></li>
+          <li><a href="#move">引越しクリーニング</a></li>
+          <li><a href="#water">水回りクリーニング</a></li>
+          <li><a href="#kitchen">キッチンクリーニング</a></li>
+          <li><a href="#floor">床・外回りクリーニング</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="index.html#faq">よくあるご質問</a></li>
+          <li><a href="index.html#cta">お問い合わせ</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+        </ul>
+      </div>
+      <div class="footer-cta">
+        <a href="tel:0356470067" class="tel">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg></span>
+          <span><span class="label-lg">03-5647-0067</span><span class="label-sm">(受付時間 9:00~18:00)</span></span>
+        </a>
+        <a href="index.html#cta" class="mail">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          <span><span class="label-lg">メールで相談する</span><span class="label-sm">24時間受付中</span></span>
+        </a>
+        <a href="#" onclick="openLineModal();return false;" class="line">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg></span>
+          <span><span class="label-lg">LINEで相談する</span><span class="label-sm">24時間受付中</span></span>
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Aqua Clean Co., Ltd. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<script>
+  var sections = ['aircon','move','water','kitchen','floor'];
+
+  function scrollToSection(id, btn) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var headerH = 84 + document.querySelector('.cat-nav').offsetHeight;
+    var top = el.getBoundingClientRect().top + window.scrollY - headerH - 16;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+    document.querySelectorAll('.cat-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+  }
+
+  // Highlight active category on scroll
+  window.addEventListener('scroll', function(){
+    var headerH = 84 + document.querySelector('.cat-nav').offsetHeight + 16;
+    var current = sections[0];
+    sections.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= headerH) current = id;
+    });
+    document.querySelectorAll('.cat-nav-btn').forEach(function(b, i){
+      b.classList.toggle('active', sections[i] === current);
+    });
+  });
+</script>
+
+<!-- LINE 友達追加モーダル -->
+<div id="lineModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:20px;padding:36px 32px;max-width:340px;width:100%;text-align:center;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
+    <button onclick="closeLineModal()" aria-label="閉じる" style="position:absolute;top:12px;right:14px;font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;padding:4px;">&#x2715;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:#06C755;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+    </div>
+    <h3 style="font-size:18px;font-weight:900;color:#1F2937;margin-bottom:8px;">LINEで友達追加</h3>
+    <p style="font-size:13px;color:#6B7280;line-height:1.75;margin-bottom:18px;">ボタンをタップするか、QRコードを読み込んで友達追加してください。<br>追加後、そのままチャットでご相談いただけます。</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://line.me/R/ti/p/@996qwdev" alt="LINE QRコード" style="width:180px;height:180px;border-radius:8px;border:1px solid #E5E9EF;display:block;margin:0 auto 18px;" />
+    <a href="https://line.me/R/ti/p/@996qwdev" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:#fff;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:800;text-decoration:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+      友達追加する
+    </a>
+  </div>
+</div>
+<script>
+function openLineModal(){var m=document.getElementById('lineModal');m.style.display='flex';}
+function closeLineModal(){document.getElementById('lineModal').style.display='none';}
+document.getElementById('lineModal').addEventListener('click',function(e){if(e.target===this)closeLineModal();});
+</script>
+
+</body>
+</html>

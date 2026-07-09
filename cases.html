@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>施工実績一覧 | アクアクリーン株式会社</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #3CADE5;
+    --primary-dark: #1E8FC9;
+    --primary-light: #6BC5EE;
+    --primary-bg: #EAF2FE;
+    --green: #1FA958;
+    --green-dark: #178A47;
+    --gray-100: #F5F7FA;
+    --gray-200: #E5E9EF;
+    --gray-300: #CED4DC;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --shadow-sm: 0 1px 3px rgba(15,30,60,0.06);
+    --shadow-md: 0 4px 16px rgba(15,30,60,0.08);
+    --shadow-lg: 0 14px 38px rgba(15,30,60,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    color: var(--gray-800); background: var(--gray-100);
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Logo ===== */
+  .logo { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; line-height: 1; }
+  .logo-mark {
+    background: var(--primary-light); color: #fff; border-radius: 8px;
+    padding: 7px 10px; font-weight: 900; font-size: 16px; line-height: 1.05;
+    text-align: center; font-style: italic; letter-spacing: 0.5px; width: 70px;
+  }
+  .logo-mark span { display: block; }
+  .logo-sub { font-size: 10px; color: var(--primary); font-weight: 700; letter-spacing: 1px; }
+
+  /* ===== Header ===== */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    background: #fff; border-bottom: 1px solid var(--gray-200);
+  }
+  .header-inner { display: flex; align-items: center; gap: 24px; height: 84px; }
+  .nav {
+    display: flex; align-items: center; justify-content: center;
+    gap: 32px; flex: 1; font-size: 13px; font-weight: 600; color: var(--gray-700);
+  }
+  .nav a:hover { color: var(--primary); }
+  .btn-contact {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgb(33,140,205); color: #fff;
+    padding: 0 22px; height: 56px; border-radius: 10px;
+    font-size: 14px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .btn-contact:hover { background: var(--primary-dark); }
+
+  /* ===== Page hero ===== */
+  .page-hero {
+    background: linear-gradient(180deg, #F4F8FE 0%, #EAF2FE 100%);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 52px 0 44px; text-align: center;
+  }
+  .breadcrumb {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-size: 12px; color: var(--gray-500); margin-bottom: 16px;
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .page-hero h1 { font-size: 38px; font-weight: 900; color: var(--gray-800); margin-bottom: 12px; }
+  .page-hero h1 span { color: var(--primary); }
+  .page-hero p { font-size: 14px; color: var(--gray-600); line-height: 1.8; }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 40px; margin-top: 28px; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num { font-size: 28px; font-weight: 900; color: var(--primary); line-height: 1; }
+  .hero-stat-num span { font-size: 14px; font-weight: 700; }
+  .hero-stat-label { font-size: 11px; color: var(--gray-500); margin-top: 4px; }
+
+  /* ===== Filter tabs ===== */
+  .filter-bar {
+    background: #fff; border-bottom: 1px solid var(--gray-200);
+    position: sticky; top: 84px; z-index: 40;
+  }
+  .filter-inner {
+    display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+  }
+  .filter-inner::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 13px 20px; font-size: 13px; font-weight: 700;
+    color: var(--gray-600); white-space: nowrap;
+    border: none; background: none; cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color 0.15s, border-color 0.15s; flex-shrink: 0;
+  }
+  .filter-btn:hover { color: var(--primary); }
+  .filter-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .filter-count {
+    background: var(--gray-200); color: var(--gray-600);
+    font-size: 11px; font-weight: 700;
+    padding: 2px 7px; border-radius: 999px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .filter-btn.active .filter-count { background: var(--primary-bg); color: var(--primary); }
+
+  /* ===== Main ===== */
+  main { padding: 40px 0 96px; }
+
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* ===== Case card ===== */
+  .case-card {
+    background: #fff; border: 1px solid var(--gray-200);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    display: flex; flex-direction: column;
+  }
+  .case-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+  .case-card[hidden] { display: none; }
+
+
+
+  /* Card body */
+  .case-body { padding: 20px 22px 22px; flex: 1; display: flex; flex-direction: column; }
+
+  .case-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .case-tag {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+    border: 1px solid;
+  }
+  .tag-care     { color: #2E7D45; background: #EAF5EE; border-color: #BFE0C8; }
+  .tag-mansion  { color: var(--primary-dark); background: var(--primary-bg); border-color: #BDD8EF; }
+  .tag-hotel    { color: #7C3D9E; background: #F5EFF8; border-color: #DBC8EC; }
+  .tag-factory  { color: #6B5B35; background: #F8F4EE; border-color: #DDD8CC; }
+  .tag-school   { color: #B45309; background: #FEF5E7; border-color: #F5DDB8; }
+  .tag-restaurant { color: #B03020; background: #FEF0EC; border-color: #F5D0C0; }
+  .tag-office   { color: #1E4E8C; background: #EDF2FA; border-color: #C8D8EE; }
+  .tag-super    { color: #2E6E2E; background: #F0FAF0; border-color: #C8E8C8; }
+  .tag-support  { color: #92610B; background: #FFF8EC; border-color: #F5E4C0; }
+  .tag-warehouse { color: #555; background: #F5F5F5; border-color: #DDD; }
+
+  .case-title {
+    font-size: 15px; font-weight: 900; color: var(--gray-800);
+    margin-bottom: 6px; line-height: 1.4;
+  }
+  .case-location {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--gray-500); margin-bottom: 12px;
+  }
+  .case-location svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+  .case-divider { border: none; border-top: 1px solid var(--gray-100); margin-bottom: 12px; }
+
+  .case-services { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .case-service-item {
+    display: flex; align-items: flex-start; gap: 7px;
+    font-size: 13px; color: var(--gray-700); line-height: 1.5;
+  }
+  .case-service-item::before {
+    content: "";
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--primary); flex-shrink: 0; margin-top: 8px;
+  }
+
+  .case-meta {
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .case-area {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; color: var(--primary);
+    background: var(--primary-bg); padding: 3px 10px; border-radius: 999px;
+  }
+  .case-area svg { width: 11px; height: 11px; }
+  .case-note {
+    font-size: 11px; color: var(--gray-500); line-height: 1.5;
+  }
+
+  /* ===== CTA strip ===== */
+  .cta-strip {
+    background: linear-gradient(180deg, #5BC2EE 0%, #1E8FC9 100%);
+    color: #fff; padding: 64px 0;
+  }
+  .cta-strip h2 { text-align: center; font-size: 30px; font-weight: 900; margin-bottom: 10px; }
+  .cta-strip p { text-align: center; font-size: 14px; opacity: 0.9; margin-bottom: 32px; }
+  .cta-btns { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .cta-btns a {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 15px;
+    transition: transform 0.12s, box-shadow 0.12s; box-shadow: var(--shadow-md);
+  }
+  .cta-btns a:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .cta-btns .tel-btn { background: #fff; color: var(--primary); }
+  .cta-btns .mail-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1.5px solid rgba(255,255,255,0.4); }
+  .cta-btns .line-btn { background: var(--green); color: #fff; }
+
+  /* ===== Footer ===== */
+  .footer { background: #fff; border-top: 1px solid var(--gray-200); padding: 48px 0 0; }
+  .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1.4fr; gap: 32px; align-items: flex-start; }
+  .footer-col h4 { font-size: 13px; color: var(--primary); font-weight: 700; margin-bottom: 16px; padding-left: 10px; border-left: 3px solid var(--primary); }
+  .footer-col ul { list-style: none; }
+  .footer-col li { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; }
+  .footer-col li a:hover { color: var(--primary); }
+  .footer-cta { display: flex; flex-direction: column; gap: 10px; }
+  .footer-cta a { display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 12px 16px; background: #fff; transition: all 0.15s; }
+  .footer-cta a:hover { border-color: var(--primary); }
+  .footer-cta .ic { width: 36px; height: 36px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .footer-cta .tel .ic { background: var(--primary-bg); color: var(--primary); }
+  .footer-cta .mail .ic { background: var(--primary-bg); color: var(--primary); }
+  .footer-cta .line .ic { background: rgba(31,169,88,0.12); color: var(--green); }
+  .footer-cta .label-lg { font-size: 16px; font-weight: 800; color: var(--gray-800); line-height: 1.1; }
+  .footer-cta .tel .label-lg { color: var(--primary); font-size: 18px; }
+  .footer-cta .label-sm { display: block; font-size: 10px; color: var(--gray-500); margin-top: 2px; }
+  .footer-bottom { border-top: 1px solid var(--gray-200); margin-top: 40px; padding: 18px 0; text-align: center; font-size: 11px; color: var(--gray-500); }
+
+  /* ===== Before/After Photos ===== */
+  .ba-section {
+    margin-top: 64px;
+    padding: 56px 0 0;
+    border-top: 2px solid var(--gray-200);
+  }
+  .ba-section-head {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .ba-section-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--primary);
+    background: var(--primary-bg);
+    padding: 4px 14px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .ba-section-head h2 {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--gray-800);
+    margin-bottom: 8px;
+  }
+  .ba-section-head p {
+    font-size: 13px;
+    color: var(--gray-500);
+  }
+  .ba-case { margin-bottom: 48px; }
+  .ba-case-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 3px solid var(--primary);
+  }
+  .ba-wrap {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .ba-card {
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16/10;
+    position: relative;
+    box-shadow: var(--shadow-md);
+  }
+  .ba-img {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #C8C9CB 0%, #989B9F 100%);
+  }
+  .ba-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .ba-img.before {
+    background:
+      linear-gradient(135deg, rgba(40,40,40,0.25) 0%, rgba(255,255,255,0) 60%),
+      repeating-linear-gradient(45deg, #BCBEC1 0 28px, #A6A8AC 28px 56px);
+  }
+  .ba-img.after {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 60%),
+      repeating-linear-gradient(45deg, #F2F4F7 0 28px, #DCE0E5 28px 56px);
+  }
+  .ba-tag {
+    position: absolute;
+    bottom: 10px;
+    left: 14px;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 999px;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 960px) {
+    .cases-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .nav { display: none; }
+    .ba-wrap { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .cases-grid { grid-template-columns: 1fr; }
+    .page-hero h1 { font-size: 28px; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 24px; }
+    .ba-wrap { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" style="background-color: rgb(60,173,229)"><span>Aqua</span><span>Clean</span></span>
+      <span class="logo-sub" style="color: rgb(60,173,229)">アクアクリーン</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html#services">サービス一覧</a>
+      <a href="index.html#reasons">選ばれる理由</a>
+      <a href="index.html#flow">ご利用の流れ</a>
+      <a href="index.html#results">実績紹介</a>
+      <a href="index.html#faq">よくあるご質問</a>
+      <a href="/blog/">ブログ</a>
+    </nav>
+    <a href="estimate.html" class="btn-contact" style="background-color: rgb(33,140,205)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/><line x1="7" y1="17" x2="12" y2="17"/></svg>
+      無料お見積もりシミュレーター
+    </a>
+  </div>
+</header>
+
+<!-- Page hero -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">トップ</a>
+      <span>›</span>
+      <span>施工実績一覧</span>
+    </div>
+    <h1>施工<span>実績一覧</span></h1>
+    <p>介護施設・マンション・学校・飲食店など、<br>様々な施設の清掃実績をご紹介します。</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">5,000<span>件以上</span></div>
+        <div class="hero-stat-label">総施工件数</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">37<span>年</span></div>
+        <div class="hero-stat-label">創業年数（1988年創業）</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">80<span>%</span></div>
+        <div class="hero-stat-label">リピート率</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-inner">
+      <button class="filter-btn active" onclick="filterCards('all', this)">すべて <span class="filter-count">15</span></button>
+      <button class="filter-btn" onclick="filterCards('care', this)">介護・福祉 <span class="filter-count">2</span></button>
+      <button class="filter-btn" onclick="filterCards('mansion', this)">マンション <span class="filter-count">3</span></button>
+      <button class="filter-btn" onclick="filterCards('school', this)">学校・教育 <span class="filter-count">2</span></button>
+      <button class="filter-btn" onclick="filterCards('restaurant', this)">飲食・食品 <span class="filter-count">4</span></button>
+      <button class="filter-btn" onclick="filterCards('office', this)">オフィス・施設 <span class="filter-count">4</span></button>
+      <button class="filter-btn filter-btn--photos" onclick="scrollToPhotos(this)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        事例 画像
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<main>
+  <div class="container">
+    <div class="cases-grid" id="casesGrid">
+
+      <!-- 01 介護施設（千葉県柏市）-->
+      <article class="case-card" data-cat="care">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-care">介護施設</span><span class="case-tag tag-care">千葉県</span></div>
+          <div class="case-title">介護施設（千葉県柏市）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            千葉県柏市
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">共用部清掃</div>
+            <div class="case-service-item">床洗浄</div>
+            <div class="case-service-item">衛生管理対応</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>18,000㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02 分譲マンション（東京都足立区）-->
+      <article class="case-card" data-cat="mansion">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-mansion">分譲マンション</span><span class="case-tag tag-mansion">東京都</span></div>
+          <div class="case-title">分譲マンション（東京都足立区）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            東京都足立区
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">共用部定期清掃</div>
+            <div class="case-service-item">ガラス清掃</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>75世帯</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03 宿泊施設（埼玉県内）-->
+      <article class="case-card" data-cat="office">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-hotel">宿泊施設</span><span class="case-tag tag-hotel">埼玉県</span></div>
+          <div class="case-title">宿泊施設（埼玉県内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            埼玉県内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">館内清掃</div>
+            <div class="case-service-item">共用部メンテナンス</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>2,000㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 04 大手食品メーカー 配送センター（関東）-->
+      <article class="case-card" data-cat="office">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-factory">配送センター</span><span class="case-tag tag-factory">関東</span></div>
+          <div class="case-title">大手食品メーカー 配送センター（関東）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            関東
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">倉庫内清掃</div>
+            <div class="case-service-item">床洗浄</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>12,000㎡</span>
+            <span class="case-note">稼働に配慮した時間帯で対応</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 05 大規模住宅地（千葉県内）-->
+      <article class="case-card" data-cat="mansion">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-mansion">住宅地</span><span class="case-tag tag-mansion">千葉県</span></div>
+          <div class="case-title">大規模住宅地（千葉県内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            千葉県内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">屋外共用部清掃</div>
+            <div class="case-service-item">巡回清掃</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>35棟</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 06 公立中学校（東京都内）6300㎡ -->
+      <article class="case-card" data-cat="school">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-school">公立中学校</span><span class="case-tag tag-school">東京都</span></div>
+          <div class="case-title">公立中学校（東京都内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            東京都内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">校内清掃</div>
+            <div class="case-service-item">ガラス清掃</div>
+            <div class="case-service-item">安全基準に配慮した作業</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>6,300㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 07 大手飲食チェーン（複数店舗／関東）-->
+      <article class="case-card" data-cat="restaurant">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-restaurant">飲食チェーン</span><span class="case-tag tag-restaurant">関東</span></div>
+          <div class="case-title">大手飲食チェーン（複数店舗／関東）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            関東（複数店舗）
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">定期清掃</div>
+            <div class="case-service-item">スポット対応</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-note">複数店舗に対応</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 08 大規模マンション（東京都内）-->
+      <article class="case-card" data-cat="mansion">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-mansion">大規模マンション</span><span class="case-tag tag-mansion">東京都</span></div>
+          <div class="case-title">大規模マンション（東京都内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            東京都内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">共用部清掃</div>
+            <div class="case-service-item">定期メンテナンス</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>約100世帯</span>
+            <span class="case-note">3LDK</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 09 食品スーパー（関東）-->
+      <article class="case-card" data-cat="restaurant">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-super">食品スーパー</span><span class="case-tag tag-super">関東</span></div>
+          <div class="case-title">食品スーパー（関東）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            関東
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">店舗清掃</div>
+            <div class="case-service-item">床メンテナンス</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>1,800㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 10 飲食店（関東）-->
+      <article class="case-card" data-cat="restaurant">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-restaurant">飲食店</span><span class="case-tag tag-restaurant">関東</span></div>
+          <div class="case-title">飲食店（関東）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            関東
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">店舗清掃</div>
+            <div class="case-service-item">厨房周辺清掃</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>390㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 11 運送会社 倉庫（関東）-->
+      <article class="case-card" data-cat="office">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-warehouse">倉庫</span><span class="case-tag tag-warehouse">関東</span></div>
+          <div class="case-title">運送会社 倉庫（関東）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            関東
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">倉庫内清掃</div>
+            <div class="case-service-item">床洗浄</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>6,000㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 12 老舗飲食店（東京都内）-->
+      <article class="case-card" data-cat="restaurant">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-restaurant">飲食店</span><span class="case-tag tag-restaurant">東京都</span></div>
+          <div class="case-title">老舗飲食店（東京都内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            東京都内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">店舗清掃</div>
+            <div class="case-service-item">定期メンテナンス</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>120㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 13 公立中学校（東京都内）9300㎡ -->
+      <article class="case-card" data-cat="school">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-school">公立中学校</span><span class="case-tag tag-school">東京都</span></div>
+          <div class="case-title">公立中学校（東京都内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            東京都内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">校内清掃</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>9,300㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 14 企業本社ビル（東京都内）-->
+      <article class="case-card" data-cat="office">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-office">本社ビル</span><span class="case-tag tag-office">東京都</span></div>
+          <div class="case-title">企業本社ビル（東京都内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            東京都内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">オフィス清掃</div>
+            <div class="case-service-item">共用部清掃</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>2,000㎡</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 15 特別支援学校（東京都内）-->
+      <article class="case-card" data-cat="care">
+        <div class="case-body">
+          <div class="case-tags"><span class="case-tag tag-support">特別支援学校</span><span class="case-tag tag-support">東京都</span></div>
+          <div class="case-title">特別支援学校（東京都内）</div>
+          <div class="case-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            東京都内
+          </div>
+          <hr class="case-divider">
+          <div class="case-services">
+            <div class="case-service-item">校内清掃</div>
+            <div class="case-service-item">安全配慮作業</div>
+          </div>
+          <div class="case-meta">
+            <span class="case-area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>2,600㎡</span>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /cases-grid -->
+  </div>
+
+  <!-- ===== Before/After Photos ===== -->
+  <div id="ba-photos" class="ba-section">
+    <div class="container">
+      <div class="ba-section-head">
+        <span class="ba-section-eyebrow">BEFORE / AFTER</span>
+        <h2>施工事例 写真</h2>
+        <p>実際の施工前後の写真をご紹介します</p>
+      </div>
+
+      <div class="ba-case">
+        <div class="ba-case-title">階段タイル清掃</div>
+        <div class="ba-wrap">
+          <div class="ba-card">
+            <div class="ba-img before"><img src="assets/case-before-1.jpg" alt="施工前の階段タイル"/></div>
+            <span class="ba-tag">Before</span>
+          </div>
+          <div class="ba-card">
+            <div class="ba-img after"><img src="assets/case-after-1.jpg" alt="施工後の階段タイル"/></div>
+            <span class="ba-tag">After</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ba-case">
+        <div class="ba-case-title">絨毯清掃</div>
+        <div class="ba-wrap">
+          <div class="ba-card">
+            <div class="ba-img before"><img src="assets/stair2-before.jpg" alt="施工前の絨毯"/></div>
+            <span class="ba-tag">Before</span>
+          </div>
+          <div class="ba-card">
+            <div class="ba-img after"><img src="assets/stair2-after.jpg" alt="施工後の絨毯"/></div>
+            <span class="ba-tag">After</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ba-case">
+        <div class="ba-case-title">床（フローリング）</div>
+        <div class="ba-wrap">
+          <div class="ba-card">
+            <div class="ba-img before"><img src="assets/fl1-before.jpg" alt="施工前の床"/></div>
+            <span class="ba-tag">Before</span>
+          </div>
+          <div class="ba-card">
+            <div class="ba-img after"><img src="assets/fl1-after.jpg" alt="施工後の床"/></div>
+            <span class="ba-tag">After</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- CTA -->
+<section class="cta-strip">
+  <h2>まずはお気軽にご相談ください</h2>
+  <p>お見積り・ご相談は無料です</p>
+  <div class="cta-btns">
+    <a href="tel:0356470067" class="tel-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
+      03-5647-0067
+    </a>
+    <a href="index.html#cta" class="mail-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      メールで相談する
+    </a>
+    <a href="#" onclick="openLineModal();return false;" class="line-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+      LINEで相談する
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo">
+          <span class="logo-mark"><span>Aqua</span><span>Clean</span></span>
+          <span class="logo-sub" style="color: rgb(60,173,229)">アクアクリーン</span>
+        </a>
+      </div>
+      <div class="footer-col">
+        <h4>サービス</h4>
+        <ul>
+          <li><a href="services.html#aircon">エアコンクリーニング</a></li>
+          <li><a href="services.html#move">引越しクリーニング</a></li>
+          <li><a href="services.html#water">水回りクリーニング</a></li>
+          <li><a href="services.html#kitchen">キッチンクリーニング</a></li>
+          <li><a href="services.html#floor">床・外回りクリーニング</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="index.html#faq">よくあるご質問</a></li>
+          <li><a href="index.html#cta">お問い合わせ</a></li>
+          <li><a href="estimate.html">料金シミュレーション</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+        </ul>
+      </div>
+      <div class="footer-cta">
+        <a href="tel:0356470067" class="tel">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg></span>
+          <span><span class="label-lg">03-5647-0067</span><span class="label-sm">(受付時間 9:00~18:00)</span></span>
+        </a>
+        <a href="index.html#cta" class="mail">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          <span><span class="label-lg">メールで相談する</span><span class="label-sm">24時間受付中</span></span>
+        </a>
+        <a href="#" onclick="openLineModal();return false;" class="line">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg></span>
+          <span><span class="label-lg">LINEで相談する</span><span class="label-sm">24時間受付中</span></span>
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Aqua Clean Co., Ltd. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<script>
+  function filterCards(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('.case-card').forEach(function(card){
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.hidden = false;
+      } else {
+        card.hidden = true;
+      }
+    });
+  }
+
+  function scrollToPhotos(btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('.case-card').forEach(function(card){ card.hidden = false; });
+    var el = document.getElementById('ba-photos');
+    var stickyOffset = 84 + 50;
+    var top = el.getBoundingClientRect().top + window.pageYOffset - stickyOffset;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  }
+</script>
+
+<!-- LINE 友達追加モーダル -->
+<div id="lineModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:20px;padding:36px 32px;max-width:340px;width:100%;text-align:center;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
+    <button onclick="closeLineModal()" aria-label="閉じる" style="position:absolute;top:12px;right:14px;font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;padding:4px;">&#x2715;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:#06C755;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+    </div>
+    <h3 style="font-size:18px;font-weight:900;color:#1F2937;margin-bottom:8px;">LINEで友達追加</h3>
+    <p style="font-size:13px;color:#6B7280;line-height:1.75;margin-bottom:18px;">ボタンをタップするか、QRコードを読み込んで友達追加してください。<br>追加後、そのままチャットでご相談いただけます。</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://line.me/R/ti/p/@996qwdev" alt="LINE QRコード" style="width:180px;height:180px;border-radius:8px;border:1px solid #E5E9EF;display:block;margin:0 auto 18px;" />
+    <a href="https://line.me/R/ti/p/@996qwdev" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:#fff;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:800;text-decoration:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+      友達追加する
+    </a>
+  </div>
+</div>
+<script>
+function openLineModal(){var m=document.getElementById('lineModal');m.style.display='flex';}
+function closeLineModal(){document.getElementById('lineModal').style.display='none';}
+document.getElementById('lineModal').addEventListener('click',function(e){if(e.target===this)closeLineModal();});
+</script>
+
+</body>
+</html>

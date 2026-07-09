@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>料金シミュレーション | アクアクリーン株式会社</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #3CADE5;
+    --primary-dark: #1E8FC9;
+    --primary-light: #6BC5EE;
+    --primary-bg: #EAF2FE;
+    --green: #1FA958;
+    --green-dark: #178A47;
+    --gray-100: #F5F7FA;
+    --gray-200: #E5E9EF;
+    --gray-300: #CED4DC;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --shadow-sm: 0 1px 3px rgba(15,30,60,0.06);
+    --shadow-md: 0 4px 16px rgba(15,30,60,0.08);
+    --shadow-lg: 0 14px 38px rgba(15,30,60,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    color: var(--gray-800);
+    background: var(--gray-100);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Logo ===== */
+  .logo { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; line-height: 1; }
+  .logo-mark {
+    background: var(--primary-light); color: #fff; border-radius: 8px;
+    padding: 7px 10px; font-weight: 900; font-size: 16px; line-height: 1.05;
+    text-align: center; font-style: italic; letter-spacing: 0.5px; width: 70px;
+  }
+  .logo-mark span { display: block; }
+  .logo-sub { font-size: 10px; color: var(--primary); font-weight: 700; letter-spacing: 1px; }
+
+  /* ===== Header ===== */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    background: #fff; border-bottom: 1px solid var(--gray-200);
+  }
+  .header-inner { display: flex; align-items: center; gap: 24px; height: 84px; }
+  .nav {
+    display: flex; align-items: center; gap: 28px; flex: 1;
+    font-size: 13px; font-weight: 600; color: var(--gray-700);
+  }
+  .nav a:hover { color: var(--primary); }
+  .btn-contact {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgb(33,140,205); color: #fff;
+    padding: 0 22px; height: 56px; border-radius: 10px;
+    font-size: 14px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .btn-contact:hover { background: var(--primary-dark); }
+
+  /* ===== Page hero ===== */
+  .page-hero {
+    background: linear-gradient(180deg, #F4F8FE 0%, #EAF2FE 100%);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 44px 0 36px; text-align: center;
+  }
+  .breadcrumb {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-size: 12px; color: var(--gray-500); margin-bottom: 14px;
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .page-hero h1 { font-size: 36px; font-weight: 900; color: var(--gray-800); margin-bottom: 10px; }
+  .page-hero h1 span { color: var(--primary); }
+  .page-hero p { font-size: 14px; color: var(--gray-600); }
+
+  /* ===== Layout ===== */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 28px;
+    align-items: flex-start;
+    padding: 32px 0 80px;
+  }
+
+  /* ===== Service list (left) ===== */
+  .services-col {}
+
+  .cat-block { margin-bottom: 28px; }
+  .cat-block:last-child { margin-bottom: 0; }
+
+  .cat-head {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; border: 1px solid var(--gray-200);
+    border-radius: 12px 12px 0 0; padding: 14px 20px;
+    border-bottom: 2px solid var(--primary);
+  }
+  .cat-head-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--primary-bg); color: var(--primary);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .cat-head-icon svg { width: 18px; height: 18px; }
+  .cat-head-label { font-size: 15px; font-weight: 900; color: var(--gray-800); }
+
+  .svc-list { display: flex; flex-direction: column; gap: 0; }
+  .svc-row {
+    display: flex; align-items: center; gap: 16px;
+    background: #fff; border: 1px solid var(--gray-200);
+    border-top: none; padding: 16px 20px;
+    transition: background 0.12s;
+  }
+  .svc-row:last-child { border-radius: 0 0 12px 12px; }
+  .svc-row:hover { background: #fafcff; }
+  .svc-row.added { background: #F0F9FF; }
+
+  .svc-info { flex: 1; min-width: 0; }
+  .svc-name { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
+  .svc-name .sub { font-size: 11px; font-weight: 500; color: var(--gray-500); margin-left: 6px; }
+  .svc-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .svc-price {
+    font-size: 15px; font-weight: 900; color: var(--primary); line-height: 1;
+  }
+  .svc-price .yen { font-size: 11px; font-weight: 700; margin-left: 1px; }
+  .svc-time {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--gray-500);
+  }
+  .svc-time svg { width: 12px; height: 12px; }
+
+  .add-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--primary); color: #fff;
+    padding: 9px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 700;
+    white-space: nowrap; flex-shrink: 0;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .add-btn:hover { background: var(--primary-dark); transform: scale(1.03); }
+  .add-btn svg { width: 14px; height: 14px; }
+
+  /* ===== Note box ===== */
+  .note-box {
+    background: #fff; border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 16px 20px; margin-top: 20px;
+    font-size: 12px; color: var(--gray-600); line-height: 1.9;
+  }
+  .note-box p::before { content: "※ "; color: var(--primary); font-weight: 700; }
+
+  /* ===== Cart (right) ===== */
+  .cart-col { position: sticky; top: 108px; }
+
+  .cart-box {
+    background: #fff; border: 1px solid var(--gray-200);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .cart-head {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: #fff; padding: 16px 22px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .cart-head h3 { font-size: 15px; font-weight: 900; flex: 1; }
+  .cart-badge {
+    background: rgba(255,255,255,0.25); color: #fff;
+    font-size: 12px; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px;
+  }
+
+  .cart-empty {
+    padding: 36px 22px; text-align: center;
+    color: var(--gray-400); font-size: 13px;
+  }
+  .cart-empty svg { width: 40px; height: 40px; margin: 0 auto 10px; opacity: 0.4; display: block; }
+
+  .cart-items { padding: 0; }
+  .cart-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 14px 18px; border-bottom: 1px solid var(--gray-100);
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name { font-size: 13px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; line-height: 1.4; }
+  .cart-item-price { font-size: 12px; color: var(--primary); font-weight: 700; }
+
+  .qty-ctrl {
+    display: flex; align-items: center; gap: 0; flex-shrink: 0;
+    border: 1px solid var(--gray-200); border-radius: 8px; overflow: hidden;
+  }
+  .qty-btn {
+    width: 30px; height: 30px; background: var(--gray-100);
+    color: var(--gray-700); font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.12s;
+  }
+  .qty-btn:hover { background: var(--gray-200); }
+  .qty-num {
+    width: 30px; height: 30px; text-align: center;
+    font-size: 14px; font-weight: 700; color: var(--gray-800);
+    display: flex; align-items: center; justify-content: center;
+    background: #fff; border-left: 1px solid var(--gray-200); border-right: 1px solid var(--gray-200);
+  }
+  .remove-btn {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: none; color: var(--gray-400);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.12s, color 0.12s; flex-shrink: 0;
+  }
+  .remove-btn:hover { background: #FEE2E2; color: #EF4444; }
+  .remove-btn svg { width: 14px; height: 14px; }
+
+  /* ===== Cart total ===== */
+  .cart-total {
+    border-top: 2px solid var(--gray-200);
+    padding: 18px 22px;
+    background: var(--gray-100);
+  }
+  .total-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .total-label { font-size: 13px; color: var(--gray-600); font-weight: 600; }
+  .total-val { font-size: 22px; font-weight: 900; color: var(--primary); line-height: 1; }
+  .total-val .unit { font-size: 13px; font-weight: 700; margin-left: 2px; }
+  .total-note { font-size: 11px; color: var(--gray-500); margin-bottom: 16px; line-height: 1.6; }
+
+  .cart-cta-btns { display: flex; flex-direction: column; gap: 8px; }
+  .cta-tel {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--primary); color: #fff;
+    padding: 14px; border-radius: 10px;
+    font-size: 15px; font-weight: 900;
+    transition: background 0.15s;
+  }
+  .cta-tel:hover { background: var(--primary-dark); }
+  .cta-tel svg { width: 18px; height: 18px; }
+  .cta-mail {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1.5px solid var(--gray-200); color: var(--gray-700);
+    padding: 11px; border-radius: 10px;
+    font-size: 13px; font-weight: 700; background: #fff;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .cta-mail:hover { border-color: var(--primary); color: var(--primary); }
+  .cta-line {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--green); color: #fff;
+    padding: 11px; border-radius: 10px;
+    font-size: 13px; font-weight: 700;
+    transition: background 0.15s;
+  }
+  .cta-line:hover { background: var(--green-dark); }
+
+  /* ===== Footer ===== */
+  .footer { background: #fff; border-top: 1px solid var(--gray-200); padding: 40px 0 0; }
+  .footer-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1.4fr;
+    gap: 32px; align-items: flex-start;
+  }
+  .footer-col h4 {
+    font-size: 13px; color: var(--primary); font-weight: 700;
+    margin-bottom: 16px; padding-left: 10px; border-left: 3px solid var(--primary);
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; }
+  .footer-col li a:hover { color: var(--primary); }
+  .footer-cta { display: flex; flex-direction: column; gap: 10px; }
+  .footer-cta a {
+    display: flex; align-items: center; gap: 12px;
+    border: 1.5px solid var(--gray-200); border-radius: 10px;
+    padding: 12px 16px; background: #fff; transition: all 0.15s;
+  }
+  .footer-cta a:hover { border-color: var(--primary); }
+  .footer-cta .ic {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .footer-cta .tel .ic { background: var(--primary-bg); color: var(--primary); }
+  .footer-cta .mail .ic { background: var(--primary-bg); color: var(--primary); }
+  .footer-cta .line .ic { background: rgba(31,169,88,0.12); color: var(--green); }
+  .footer-cta .label-lg { font-size: 16px; font-weight: 800; color: var(--gray-800); line-height: 1.1; }
+  .footer-cta .tel .label-lg { color: var(--primary); font-size: 18px; }
+  .footer-cta .label-sm { display: block; font-size: 10px; color: var(--gray-500); margin-top: 2px; }
+  .footer-bottom {
+    border-top: 1px solid var(--gray-200); margin-top: 40px; padding: 18px 0;
+    text-align: center; font-size: 11px; color: var(--gray-500);
+  }
+
+  /* ===== Toast ===== */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--gray-800); color: #fff;
+    padding: 10px 22px; border-radius: 999px;
+    font-size: 13px; font-weight: 600;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 200; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== Mobile cart drawer ===== */
+  .cart-fab {
+    display: none;
+    position: fixed; bottom: 24px; right: 24px; z-index: 100;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 999px;
+    padding: 14px 22px; font-size: 14px; font-weight: 700;
+    box-shadow: 0 6px 20px rgba(30,91,214,0.35);
+    align-items: center; gap: 10px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .cart-fab:hover { background: var(--primary-dark); }
+  .cart-fab-badge {
+    background: #fff; color: var(--primary);
+    font-size: 12px; font-weight: 900;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    .cart-col { position: static; }
+    .nav { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .cart-fab { display: flex; }
+  }
+  @media (max-width: 600px) {
+    .page-hero h1 { font-size: 26px; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" style="background-color: rgb(60,173,229)"><span>Aqua</span><span>Clean</span></span>
+      <span class="logo-sub" style="color: rgb(60,173,229)">アクアクリーン</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html#services">サービス一覧</a>
+      <a href="services.html">詳細サービス</a>
+      <a href="index.html#results">実績紹介</a>
+      <a href="index.html#faq">よくあるご質問</a>
+      <a href="/blog/">ブログ</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Page hero -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">トップ</a>
+      <span>›</span>
+      <span>料金シミュレーション</span>
+    </div>
+    <h1>料金<span>シミュレーション</span></h1>
+    <p>ご希望のサービスを追加して、おおよその見積もり金額をご確認いただけます。</p>
+  </div>
+</section>
+
+<!-- Main -->
+<div class="container">
+  <div class="layout">
+
+    <!-- Left: service list -->
+    <div class="services-col" id="serviceList">
+
+      <!-- エアコンクリーニング -->
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="10" rx="2"/><line x1="6" y1="8" x2="18" y2="8"/><line x1="6" y1="11" x2="18" y2="11"/><path d="M8 14v3M16 14v3M12 14v5"/></svg>
+          </div>
+          <span class="cat-head-label">エアコンクリーニング</span>
+        </div>
+        <div class="svc-list">
+          <div class="svc-row" data-id="ac1" data-min="10000" data-max="12000" data-name="エアコン壁掛け（通常）">
+            <div class="svc-info">
+              <div class="svc-name">壁掛け（通常）</div>
+              <div class="svc-meta">
+                <span class="svc-price">10,000〜12,000<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約2時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="ac2" data-min="18800" data-max="20800" data-name="エアコン壁掛け（お掃除機能付き）">
+            <div class="svc-info">
+              <div class="svc-name">壁掛け（お掃除機能付き）</div>
+              <div class="svc-meta">
+                <span class="svc-price">18,800〜20,800<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約3〜4時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="ac3" data-min="26500" data-max="28500" data-name="エアコン天井埋め込みタイプ">
+            <div class="svc-info">
+              <div class="svc-name">天井埋め込みタイプ</div>
+              <div class="svc-meta">
+                <span class="svc-price">26,500〜28,500<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約3時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 空室クリーニング -->
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><rect x="9" y="13" width="6" height="8"/></svg>
+          </div>
+          <span class="cat-head-label">空室クリーニング</span>
+        </div>
+        <div class="svc-list">
+          <div class="svc-row" data-id="mv1" data-min="25400" data-max="27400" data-name="空室クリーニング 1K/1DK（30㎡以下）">
+            <div class="svc-info">
+              <div class="svc-name">1K / 1DK<span class="sub">30㎡以下</span></div>
+              <div class="svc-meta">
+                <span class="svc-price">25,400〜27,400<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>現地確認</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 水回りクリーニング -->
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 8 4 12 4 16a8 8 0 0 0 16 0c0-4-4-8-8-14z"/></svg>
+          </div>
+          <span class="cat-head-label">水回りクリーニング</span>
+        </div>
+        <div class="svc-list">
+          <div class="svc-row" data-id="wt1" data-min="8900" data-max="10900" data-name="トイレクリーニング">
+            <div class="svc-info">
+              <div class="svc-name">トイレ</div>
+              <div class="svc-meta">
+                <span class="svc-price">8,900〜10,900<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約1.5時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="wt2" data-min="18800" data-max="20800" data-name="浴室クリーニング">
+            <div class="svc-info">
+              <div class="svc-name">浴室</div>
+              <div class="svc-meta">
+                <span class="svc-price">18,800〜20,800<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約2時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="wt3" data-min="8350" data-max="10350" data-name="洗面台クリーニング">
+            <div class="svc-info">
+              <div class="svc-name">洗面台</div>
+              <div class="svc-meta">
+                <span class="svc-price">8,350〜10,350<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約1時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- キッチンクリーニング -->
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14L4 20h16l-2-6H6z"/><path d="M8 14V8h8v6"/><path d="M12 5v3"/></svg>
+          </div>
+          <span class="cat-head-label">キッチンクリーニング</span>
+        </div>
+        <div class="svc-list">
+          <div class="svc-row" data-id="kt1" data-min="18800" data-max="20800" data-name="レンジフード・換気扇クリーニング">
+            <div class="svc-info">
+              <div class="svc-name">レンジフード / 換気扇</div>
+              <div class="svc-meta">
+                <span class="svc-price">18,800〜20,800<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約2.5時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="kt2" data-min="18800" data-max="20800" data-name="キッチンクリーニング">
+            <div class="svc-info">
+              <div class="svc-name">キッチン（シンク・コンロ・作業台）</div>
+              <div class="svc-meta">
+                <span class="svc-price">18,800〜20,800<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約2.5時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 床・その他 -->
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+          </div>
+          <span class="cat-head-label">床・その他</span>
+        </div>
+        <div class="svc-list">
+          <div class="svc-row" data-id="fl1" data-min="12200" data-max="14200" data-name="フローリング洗浄ワックス（10帖以下）">
+            <div class="svc-info">
+              <div class="svc-name">フローリング洗浄ワックス<span class="sub">10帖以下一律</span></div>
+              <div class="svc-meta">
+                <span class="svc-price">12,200〜14,200<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約2時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="fl2" data-min="45200" data-max="47200" data-name="フローリングハクリ＆ワックス（10帖以下）">
+            <div class="svc-info">
+              <div class="svc-name">フローリングハクリ＆ワックス<span class="sub">10帖以下一律</span></div>
+              <div class="svc-meta">
+                <span class="svc-price">45,200〜47,200<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約7時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="fl3" data-min="15500" data-max="17500" data-name="カーペットクリーニング（10帖以下）">
+            <div class="svc-info">
+              <div class="svc-name">カーペットクリーニング<span class="sub">10帖以下</span></div>
+              <div class="svc-meta">
+                <span class="svc-price">15,500〜17,500<span class="yen">円</span></span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="fl4" data-min="10000" data-max="12000" data-name="ガラス・サッシクリーニング">
+            <div class="svc-info">
+              <div class="svc-name">ガラス・サッシ</div>
+              <div class="svc-meta">
+                <span class="svc-price">10,000〜12,000<span class="yen">円</span></span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="fl5" data-min="18800" data-max="20800" data-name="玄関タイルクリーニング（2㎡以下）">
+            <div class="svc-info">
+              <div class="svc-name">玄関タイル<span class="sub">2㎡以下</span></div>
+              <div class="svc-meta">
+                <span class="svc-price">18,800〜20,800<span class="yen">円</span></span>
+                <span class="svc-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>約2時間</span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+          <div class="svc-row" data-id="fl6" data-min="10000" data-max="12000" data-name="ベランダ外回り高圧洗浄">
+            <div class="svc-info">
+              <div class="svc-name">ベランダ外回り高圧洗浄</div>
+              <div class="svc-meta">
+                <span class="svc-price">10,000〜12,000<span class="yen">円</span></span>
+              </div>
+            </div>
+            <button class="add-btn" onclick="addItem(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note -->
+      <div class="note-box">
+        <p>汚れ具合・広さ等により料金が変動する場合がございます。</p>
+        <p>正式なお見積りは現地確認後のご提示となります。</p>
+        <p>表示金額はすべて税込み価格の目安です。</p>
+      </div>
+
+    </div><!-- /services-col -->
+
+    <!-- Right: Cart -->
+    <div class="cart-col">
+      <div class="cart-box">
+        <div class="cart-head">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <h3>見積もりカート</h3>
+          <span class="cart-badge" id="cartBadge">0件</span>
+        </div>
+
+        <div id="cartEmpty" class="cart-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <p>サービスを追加してください</p>
+        </div>
+
+        <div id="cartItems" class="cart-items" style="display:none"></div>
+
+        <div id="cartTotal" class="cart-total" style="display:none">
+          <div class="total-row">
+            <span class="total-label">お見積もり合計</span>
+          </div>
+          <div class="total-row">
+            <span class="total-val" id="totalMin">0</span>
+            <span style="font-size:14px;color:var(--gray-500);padding:0 6px">〜</span>
+            <span class="total-val" id="totalMax">0<span class="unit">円</span></span>
+          </div>
+          <p class="total-note">※汚れ具合や現地状況により変動します<br>※正式見積は現地確認後となります</p>
+          <div class="cart-cta-btns">
+            <a href="tel:0356470067" class="cta-tel">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
+              03-5647-0067 に電話する
+            </a>
+            <a href="index.html#cta" class="cta-mail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              メールで相談する
+            </a>
+            <a href="#" onclick="openLineModal();return false;" class="cta-line">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+              LINEで相談する
+            </a>
+          </div>
+        </div>
+      </div>
+    </div><!-- /cart-col -->
+
+  </div>
+</div>
+
+<!-- Mobile FAB -->
+<button class="cart-fab" id="cartFab" onclick="document.querySelector('.cart-col').scrollIntoView({behavior:'smooth'})">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  カートを見る
+  <span class="cart-fab-badge" id="fabBadge">0</span>
+</button>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo footer-logo">
+          <span class="logo-mark"><span>Aqua</span><span>Clean</span></span>
+          <span class="logo-sub" style="color: rgb(60,173,229)">アクアクリーン</span>
+        </a>
+      </div>
+      <div class="footer-col">
+        <h4>サービス</h4>
+        <ul>
+          <li><a href="services.html#aircon">エアコンクリーニング</a></li>
+          <li><a href="services.html#move">引越しクリーニング</a></li>
+          <li><a href="services.html#water">水回りクリーニング</a></li>
+          <li><a href="services.html#kitchen">キッチンクリーニング</a></li>
+          <li><a href="services.html#floor">床・外回りクリーニング</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="index.html#faq">よくあるご質問</a></li>
+          <li><a href="index.html#cta">お問い合わせ</a></li>
+          <li><a href="estimate.html">料金シミュレーション</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+        </ul>
+      </div>
+      <div class="footer-cta">
+        <a href="tel:0356470067" class="tel">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg></span>
+          <span><span class="label-lg">03-5647-0067</span><span class="label-sm">(受付時間 9:00~18:00)</span></span>
+        </a>
+        <a href="index.html#cta" class="mail">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          <span><span class="label-lg">メールで相談する</span><span class="label-sm">24時間受付中</span></span>
+        </a>
+        <a href="#" onclick="openLineModal();return false;" class="line">
+          <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg></span>
+          <span><span class="label-lg">LINEで相談する</span><span class="label-sm">24時間受付中</span></span>
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Aqua Clean Co., Ltd. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<script>
+  var cart = {}; // { id: { name, min, max, qty } }
+
+  function fmt(n) {
+    return n.toLocaleString('ja-JP');
+  }
+
+  function addItem(btn) {
+    var row = btn.closest('.svc-row');
+    var id = row.dataset.id;
+    var name = row.dataset.name;
+    var min = parseInt(row.dataset.min, 10);
+    var max = parseInt(row.dataset.max, 10);
+
+    if (cart[id]) {
+      cart[id].qty++;
+    } else {
+      cart[id] = { name: name, min: min, max: max, qty: 1 };
+    }
+
+    row.classList.add('added');
+    renderCart();
+    showToast('「' + name + '」を追加しました');
+  }
+
+  function changeQty(id, delta) {
+    if (!cart[id]) return;
+    cart[id].qty += delta;
+    if (cart[id].qty <= 0) {
+      removeItem(id);
+      return;
+    }
+    renderCart();
+  }
+
+  function removeItem(id) {
+    var rows = document.querySelectorAll('.svc-row[data-id="' + id + '"]');
+    rows.forEach(function(r){ r.classList.remove('added'); });
+    delete cart[id];
+    renderCart();
+  }
+
+  function renderCart() {
+    var ids = Object.keys(cart);
+    var count = ids.reduce(function(s, id){ return s + cart[id].qty; }, 0);
+    var totalMin = 0, totalMax = 0;
+
+    document.getElementById('cartBadge').textContent = count + '件';
+    document.getElementById('fabBadge').textContent = count;
+
+    var empty = document.getElementById('cartEmpty');
+    var itemsEl = document.getElementById('cartItems');
+    var totalEl = document.getElementById('cartTotal');
+
+    if (ids.length === 0) {
+      empty.style.display = '';
+      itemsEl.style.display = 'none';
+      totalEl.style.display = 'none';
+      return;
+    }
+
+    empty.style.display = 'none';
+    itemsEl.style.display = '';
+    totalEl.style.display = '';
+
+    var html = '';
+    ids.forEach(function(id) {
+      var item = cart[id];
+      var subMin = item.min * item.qty;
+      var subMax = item.max * item.qty;
+      totalMin += subMin;
+      totalMax += subMax;
+      html += '<div class="cart-item">' +
+        '<div class="cart-item-info">' +
+          '<div class="cart-item-name">' + item.name + '</div>' +
+          '<div class="cart-item-price">' + fmt(subMin) + '〜' + fmt(subMax) + '円</div>' +
+        '</div>' +
+        '<div class="qty-ctrl">' +
+          '<button class="qty-btn" onclick="changeQty(\'' + id + '\',-1)">−</button>' +
+          '<span class="qty-num">' + item.qty + '</span>' +
+          '<button class="qty-btn" onclick="changeQty(\'' + id + '\',1)">＋</button>' +
+        '</div>' +
+        '<button class="remove-btn" onclick="removeItem(\'' + id + '\')" title="削除">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</button>' +
+      '</div>';
+    });
+    itemsEl.innerHTML = html;
+
+    document.getElementById('totalMin').textContent = fmt(totalMin) + '〜';
+    document.getElementById('totalMax').innerHTML = fmt(totalMax) + '<span class="unit">円</span>';
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function(){ t.classList.remove('show'); }, 2000);
+  }
+</script>
+
+<!-- LINE 友達追加モーダル -->
+<div id="lineModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:20px;padding:36px 32px;max-width:340px;width:100%;text-align:center;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.2);">
+    <button onclick="closeLineModal()" aria-label="閉じる" style="position:absolute;top:12px;right:14px;font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;padding:4px;">&#x2715;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:#06C755;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+    </div>
+    <h3 style="font-size:18px;font-weight:900;color:#1F2937;margin-bottom:8px;">LINEで友達追加</h3>
+    <p style="font-size:13px;color:#6B7280;line-height:1.75;margin-bottom:18px;">ボタンをタップするか、QRコードを読み込んで友達追加してください。<br>追加後、そのままチャットでご相談いただけます。</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://line.me/R/ti/p/@996qwdev" alt="LINE QRコード" style="width:180px;height:180px;border-radius:8px;border:1px solid #E5E9EF;display:block;margin:0 auto 18px;" />
+    <a href="https://line.me/R/ti/p/@996qwdev" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#06C755;color:#fff;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:800;text-decoration:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 5.86 2 10.6c0 3 1.92 5.66 4.83 7.18-.21.74-.78 2.74-.89 3.16-.14.5.18.5.39.36.16-.11 2.55-1.74 3.59-2.45.66.1 1.34.15 2.08.15 5.52 0 10-3.86 10-8.6S17.52 2 12 2z"/></svg>
+      友達追加する
+    </a>
+  </div>
+</div>
+<script>
+function openLineModal(){var m=document.getElementById('lineModal');m.style.display='flex';}
+function closeLineModal(){document.getElementById('lineModal').style.display='none';}
+document.getElementById('lineModal').addEventListener('click',function(e){if(e.target===this)closeLineModal();});
+</script>
+
+</body>
+</html>
