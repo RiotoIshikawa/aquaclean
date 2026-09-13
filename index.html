@@ -886,6 +886,44 @@
     .nav { display: none; }
     .header-cta { gap: 6px; }
   }
+
+  /* スマホ幅のみ: ヒーロー画像のトリミング調整（PCレイアウトは変更なし） */
+  @media (max-width: 768px) {
+    /* 縦長すぎて上部の天井・壁の余白が目立つため、やや横長に詰める */
+    .hero-img-wrap { aspect-ratio: 4 / 3.6; }
+    /* 作業中の手元がフレーム内に収まるよう、表示位置をやや下寄りの被写体に合わせる */
+    .hero-img-wrap img { object-position: center 40%; }
+
+    /*
+      ヘッダーの「無料お見積もりシミュレーター」ボタンが折り返さず
+      画面幅を超えてはみ出し、ページ全体に横スクロールが発生していた。
+      これがヒーローセクションを含むページ全体を左寄りに見せていた原因のため、
+      ボタン内テキストを折り返し可能にしてコンテナ内に収める。
+    */
+    .header-inner { gap: 12px; }
+    .header-cta { flex: 1; min-width: 0; height: auto; }
+    .btn-contact {
+      width: 100%;
+      white-space: normal;
+      text-align: center;
+      justify-content: center;
+      height: auto;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.3;
+      gap: 6px;
+    }
+    .btn-contact svg { flex-shrink: 0; }
+
+    /*
+      見出し・本文・バッジ・ボタンが左揃えのテキストのため、
+      左右マージンが均等でも見た目に左寄りに感じられていた。
+      要素そのものを中央揃えにして画面中央に集約する。
+    */
+    .hero-text { text-align: center; }
+    .hero-badges { justify-content: center; }
+    .hero-cta { justify-content: center; }
+  }
 </style>
 </head>
 <body>
