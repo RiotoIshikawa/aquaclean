@@ -14,7 +14,7 @@ declare(strict_types=1);
 // ---- 設定 ----------------------------------------------------------------
 const CONTACT_TO_EMAIL   = 'info@aqua-clean.jp'; // TODO: 実際の宛先メールアドレスに変更
 const CONTACT_FROM_EMAIL = 'noreply@aqua-clean.jp'; // TODO: 送信元アドレス（自ドメインのアドレス推奨）
-const CONTACT_SITE_NAME  = 'アクアクリーン株式会社';
+const CONTACT_SITE_NAME  = 'アクアクリーン';
 const MAX_FILES          = 5;
 const MAX_FILE_BYTES     = 5 * 1024 * 1024;  // 1ファイルあたり最大5MB
 const MAX_TOTAL_BYTES    = 15 * 1024 * 1024; // 添付合計最大15MB

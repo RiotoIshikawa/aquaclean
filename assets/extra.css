@@ -1,0 +1,191 @@
+/* ===== 料金表・運営者情報（共通） =====
+   index.html / services.html で読み込み。各ページの :root 変数を利用する。 */
+
+/* --- 料金セクション --- */
+.price-section { background: #fff; padding: 72px 0; }
+.price-head { text-align: center; margin-bottom: 20px; }
+.price-eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: var(--primary, #3CADE5);
+  margin-bottom: 6px;
+}
+.price-title {
+  display: inline-block;
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--gray-800, #1f2937);
+  position: relative;
+  padding-bottom: 14px;
+}
+.price-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 48px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--primary, #3CADE5);
+  transform: translateX(-50%);
+}
+.price-card.wide { grid-column: span 2; }
+.price-card.wide .price-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 32px;
+}
+.sp-br { display: none; }
+.price-lead {
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--gray-600, #4b5563);
+  margin: -8px 0 32px;
+}
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.price-card {
+  background: #fff;
+  border: 1px solid var(--gray-200, #e5e7eb);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(15,30,60,.06));
+  overflow: hidden;
+}
+.price-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: var(--primary-bg, #EAF2FE);
+  color: var(--primary-dark, #1E8FC9);
+  font-size: 16px;
+  font-weight: 900;
+}
+.price-card-head svg { width: 22px; height: 22px; flex-shrink: 0; }
+.price-list { list-style: none; margin: 0; padding: 6px 20px 10px; }
+.price-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--gray-200, #e5e7eb);
+  font-size: 14px;
+  color: var(--gray-800, #1f2937);
+}
+.price-list li:last-child { border-bottom: none; }
+.price-list .p-name small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--gray-500, #6b7280);
+}
+.price-list .p-val {
+  flex-shrink: 0;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--primary-dark, #1E8FC9);
+  white-space: nowrap;
+}
+.price-list .p-val .yen { font-size: 12px; font-weight: 700; margin-left: 1px; }
+.price-list .p-val .from { font-size: 12px; font-weight: 700; color: var(--gray-600, #4b5563); }
+
+.price-notes {
+  margin-top: 28px;
+  padding: 20px 24px;
+  border: 1px solid var(--gray-200, #e5e7eb);
+  border-radius: 14px;
+  background: var(--gray-100, #f9fafb);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--gray-700, #374151);
+}
+.price-notes .pay { font-weight: 700; color: var(--gray-800, #1f2937); }
+.price-notes .pay .ng { color: #d92d4b; }
+.price-notes p { margin: 0; }
+.price-cta { text-align: center; margin-top: 28px; }
+.price-cta a {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 999px;
+  background: var(--primary, #3CADE5);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.price-cta a:hover { background: var(--primary-dark, #1E8FC9); }
+.price-cta .sub-link { display: block; margin-top: 12px; background: none; padding: 0; color: var(--primary-dark, #1E8FC9); font-size: 13px; }
+.price-cta .sub-link:hover { background: none; text-decoration: underline; }
+
+/* ヒーロー直下の料金リンク */
+.hero-price-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-dark, #1E8FC9);
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+}
+.hero-price-link:hover { opacity: .8; }
+
+/* --- 運営者情報 --- */
+.operator-section { background: var(--gray-100, #f9fafb); padding: 72px 0; }
+.operator-table {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid var(--gray-200, #e5e7eb);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(15,30,60,.06));
+  overflow: hidden;
+}
+.operator-table dl { display: grid; grid-template-columns: 180px 1fr; margin: 0; }
+.operator-table dt,
+.operator-table dd {
+  margin: 0;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--gray-200, #e5e7eb);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.operator-table dt { background: var(--primary-bg, #EAF2FE); font-weight: 700; color: var(--gray-800, #1f2937); }
+.operator-table dd { color: var(--gray-700, #374151); }
+.operator-table dl > :nth-last-child(-n+2) { border-bottom: none; }
+
+@media (max-width: 900px) {
+  .price-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .price-section, .operator-section { padding: 52px 0; }
+  .price-grid { grid-template-columns: 1fr; }
+  .price-card.wide { grid-column: auto; }
+  .price-card.wide .price-list { display: block; }
+  .price-title { font-size: 24px; }
+  .sp-br { display: inline; }
+  .price-notes { grid-template-columns: 1fr; }
+  .operator-table dl { grid-template-columns: 1fr; }
+  .operator-table dt { border-bottom: none; padding-bottom: 6px; }
+  .operator-table dd { padding-top: 6px; }
+  .operator-table dl > :nth-last-child(2) { border-bottom: none; }
+}
+
+/* アンカー移動時に固定ヘッダーへ隠れないようにする */
+#price, #operator { scroll-margin-top: 80px; }
+.price-card.wide .price-list li:nth-last-child(-n+2) { border-bottom: none; }
+@media (max-width: 640px) {
+  .price-card.wide .price-list li:nth-last-child(2) { border-bottom: 1px dashed var(--gray-200, #e5e7eb); }
+}
